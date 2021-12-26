@@ -56,7 +56,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Return the pointer.
 bool SortOpen(RouteModel::Node *node_one, RouteModel::Node *node_two){
 
-    return (node_one->g_value+node_one->h_value) > (node_two->g_value+node_two->h_value);
+    return (node_one->g_value+node_one->h_value) < (node_two->g_value+node_two->h_value);
 }
 
 RouteModel::Node *RoutePlanner::NextNode() {
@@ -82,17 +82,17 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
-    auto current_parent = current_node->parent;
 
     // TODO: Implement your solution here.
     while(current_node != start_node){
-        this->distance += current_node->distance(*current_parent);
         path_found.emplace_back(*current_node);
-        current_node = current_parent;
-        current_parent = current_node->parent;
+        distance += current_node->distance(*current_node->parent);
+        //current_node = current_parent;
+        current_node = current_node->parent;
+        
     }
 
-    this->distance += current_parent->distance(*start_node);
+    //distance += current_node->distance(*start_node);
     path_found.emplace_back(*start_node);
     std::reverse(path_found.begin(), path_found.end());
 
